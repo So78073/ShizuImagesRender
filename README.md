@@ -1,7 +1,9 @@
 # ShizuImagesRender
 
-V1.5.0 
+V1.6.0 
 
 - New Interface
+- placeholder add
 - OpenSource Project
 - Python atualizations
+- improving my image resizing library

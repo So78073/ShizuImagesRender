@@ -84,6 +84,5 @@ def main(origem, newDimensionIMG):
 
     else:                                                                        
         print('O caminho do arquivo não é válido.')
-
-
+    
 
