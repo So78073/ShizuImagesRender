@@ -1,1 +1,23 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
 __pycache__/
+
+# Ignore environment folders
+env/
+venv/
+.venv/
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore other files or folders you don't want in your repository
+.DS_Store
+Thumbs.db
+
+# Add your own custom rules below
