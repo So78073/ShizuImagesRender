@@ -27,7 +27,9 @@ def pathCopyInstructions(diretorio): # pega todos as imagens de todos os arquivo
 
 
 def copyFolder(): # reseta a pasta output para criar novos diretorios e arquivos 
-    outputFolder = 'C:\\Users\\Shizu ^^\\Desktop\\PyImageProject\\data\\output'
+    pathDir = os.path.dirname(os.path.abspath(__file__))
+    pathDir = os.path.join(pathDir, 'data', 'output')
+    outputFolder = pathDir
 
     if not os.path.exists(outputFolder):
         os.makedirs(outputFolder)
