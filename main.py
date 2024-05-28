@@ -77,7 +77,7 @@ class ImageResizeApp(QWidget):
             }
         ''')
 
-        self.setFixedSize(400, 250)
+        self.setFixedSize(400, 350)
 
     def browse_file(self):
         file_dialog = QFileDialog()
