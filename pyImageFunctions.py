@@ -5,7 +5,7 @@ import shutil
 def renderImage(input_path, output_path, newdimension): # redimensiona imagem
     try:
         imagem = Image.open(input_path)
-        imagem_redimensionada = imagem.resize(newdimension)
+        imagem_redimensionada = imagem.resize(newdimension, Image.LANCZOS)
         imagem_redimensionada.save(output_path)
         print(f'Imagem redimensionada com sucesso para {newdimension}')
     except Exception as e:
