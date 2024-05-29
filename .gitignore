@@ -1,7 +1,7 @@
 # Ignore Python bytecode files
 *.pyc
 *.pyo
-__pycache__/
+.__pycache__/
 
 # Ignore environment folders
 env/

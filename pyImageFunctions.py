@@ -1,6 +1,5 @@
 from PIL import Image
 import os
-import shutil
 
 def renderImage(input_path, output_path, newdimension): 
     try:
