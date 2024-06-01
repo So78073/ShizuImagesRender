@@ -1,23 +1,20 @@
-from PIL import Image
 import os
+from PIL import Image
 
-def renderImage(input_path, output_path, newdimension): 
-    try:
-        imagem = Image.open(input_path)
-        imagem_redimensionada = imagem.resize(newdimension)
-        imagem_redimensionada.save(output_path)
-        print(f'Imagem redimensionada com sucesso para {newdimension}')
-    except Exception as e:
-        print(f'Erro ao redimensionar imagem: {e}')
+def resize_image(origin, output, new_dimensions):
+    # Verifica permissões de leitura para o arquivo de origem
+    if not os.access(origin, os.R_OK):
+        raise PermissionError(f"Cannot read file: {origin}")
+    
+    # Verifica permissões de escrita para o diretório de saída
+    output_dir = os.path.dirname(output)
+    if not os.access(output_dir, os.W_OK):
+        raise PermissionError(f"Cannot write to directory: {output_dir}")
 
-def pathExist(path) : 
-    return os.path.exists(path)
+    image = Image.open(origin)
+    resized_image = image.resize(new_dimensions, Image.LANCZOS)
+    resized_image.save(output)
 
-def main(origem, output, newDimensionIMG):
-    if os.path.exists(origem):
-        try:
-            renderImage(origem, output, newDimensionIMG)
-        except Exception as e:
-            print(f'Erro ao redimensionar imagem: {e}')
-    else:                                                                        
-        print('O caminho do arquivo não é válido.')
+def main(origin_paths, output_paths, new_dimensions):
+    for origin, output in zip(origin_paths, output_paths):
+        resize_image(origin, output, new_dimensions)
