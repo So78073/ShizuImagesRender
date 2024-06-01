@@ -2,7 +2,7 @@
 *.pyc
 *.pyo
 .__pycache__/
-_pycache__/
+__pycache__/
 
 # Ignore environment folders
 env/
