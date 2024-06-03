@@ -34,7 +34,7 @@ class ImageResizeApp(QWidget):
         super().__init__()
 
         self.setWindowTitle('Shizu ResizeImagePy')
-        self.setWindowIcon(QIcon('assets/logo/ShizuTheHat.png'))
+        self.setWindowIcon(QIcon('ShizuImagesRender-shizuAnkai/assets/logo/ShizuTheHat.png'))
 
         self.inputPath = pathDir
         self.outPath = pathOut
