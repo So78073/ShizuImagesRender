@@ -34,6 +34,7 @@ class ImageResizeApp(QWidget):
         self.setWindowIcon(QIcon('assets/logo/blackhat.jpg'))
         
         self.default_file_path = pathDir
+        self.outPath = pathOut
         self.default_WH = '500'
 
         self.file_path_label = QLabel('Caminho dos Arquivos:')
