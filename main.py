@@ -9,6 +9,7 @@ import pyImageFunctions as pyy
 
 pathDir = os.path.dirname(os.path.abspath(__file__))
 pathDir = os.path.join(pathDir, 'data', 'input')
+pathOut = pathDir.replace('input', 'output')
 
 class ResizeThread(QThread):
     progress = pyqtSignal(int)
