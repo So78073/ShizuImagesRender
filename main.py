@@ -1,7 +1,8 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
-                             QLabel, QLineEdit, QPushButton, QFileDialog,
-                             QMessageBox, QProgressBar)
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QFileDialog, QMessageBox, QProgressBar
+)
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import os
@@ -10,6 +11,7 @@ import pyImageFunctions as pyy
 pathDir = os.path.dirname(os.path.abspath(__file__))
 pathDir = os.path.join(pathDir, 'data', 'input')
 pathOut = pathDir.replace('input', 'output')
+
 
 class ResizeThread(QThread):
     progress = pyqtSignal(int)
@@ -23,29 +25,30 @@ class ResizeThread(QThread):
     def run(self):
         total = len(self.origin_paths)
         for i, (origin, output) in enumerate(zip(self.origin_paths, self.output_paths)):
-            pyy.resize_image(origin, output, self.new_dimensions)
+            pyy.main(origin, output, self.new_dimensions)
             self.progress.emit(int((i + 1) / total * 100))
+
 
 class ImageResizeApp(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle('Shizu ResizeImagePy')
-        self.setWindowIcon(QIcon('assets/logo/blackhat.jpg'))
-        
-        self.default_file_path = pathDir
+        self.setWindowIcon(QIcon('ShizuImagesRender-shizuAnkai/assets/logo/ShizuTheHat.png'))
+
+        self.inputPath = pathDir
         self.outPath = pathOut
         self.default_WH = '500'
 
         self.file_path_label = QLabel('Caminho dos Arquivos:')
-        self.file_path_input = QLineEdit(self.default_file_path)
+        self.file_path_input = QLineEdit(self.inputPath)
         self.file_path_input.setReadOnly(True)
         self.file_browse_button = QPushButton('Selecionar Arquivos')
         self.file_browse_button.setToolTip('Clique para selecionar arquivos')
         self.file_browse_button.clicked.connect(self.browse_files)
 
         self.output_path_label = QLabel('Caminho de Saída:')
-        self.output_path_input = QLineEdit()
+        self.output_path_input = QLineEdit(self.outPath)
         self.output_path_input.setReadOnly(True)
         self.output_browse_button = QPushButton('Selecionar Caminho de Saída')
         self.output_browse_button.setToolTip('Clique para selecionar um caminho de saída')
@@ -105,9 +108,9 @@ class ImageResizeApp(QWidget):
 
     def browse_files(self):
         file_dialog = QFileDialog()
-        file_paths, _ = file_dialog.getOpenFileNames(self, 'Selecionar Arquivos')
+        file_paths = file_dialog.getExistingDirectory(self, 'Selecionar Arquivos')
         if file_paths:
-            self.file_path_input.setText("; ".join(file_paths))
+            self.file_path_input.setText(file_paths)
             self.file_paths = file_paths
 
     def browse_output_folder(self):
@@ -117,15 +120,11 @@ class ImageResizeApp(QWidget):
             self.output_path_input.setText(folder_path)
 
     def resize_images(self):
-        if not hasattr(self, 'file_paths') or not self.file_paths:
-            QMessageBox.critical(self, 'Erro', 'Caminho dos arquivos inválido.')
-            return
-
+        input_path = self.file_path_input.text()
         output_path = self.output_path_input.text()
 
         if not output_path or not os.path.isdir(output_path):
-            QMessageBox.critical(self, 'Erro', 'Caminho de saída inválido.')
-            return
+            output_path = pathOut
 
         try:
             width = int(self.width_input.text())
@@ -133,25 +132,23 @@ class ImageResizeApp(QWidget):
         except ValueError:
             QMessageBox.critical(self, 'Erro', 'Largura e Altura devem ser números inteiros.')
             return
-
+        
         if width <= 0 or height <= 0:
             QMessageBox.critical(self, 'Erro', 'Largura e Altura devem ser valores positivos.')
             return
 
+        new_dimensions = (width, height)
+
         try:
-            origin_paths = self.file_paths
-            output_paths = [os.path.join(output_path, os.path.basename(fp)) for fp in origin_paths]
-            newDimensionIMG = (width, height)
-            
             self.progress_bar.setMaximum(100)
-            self.progress_bar.setValue(0)
+            self.progress_bar.setValue(1)
             self.progress_bar.setVisible(True)
 
-            self.thread = ResizeThread(origin_paths, output_paths, newDimensionIMG)
+            self.thread = ResizeThread([input_path], [output_path], new_dimensions)
             self.thread.progress.connect(self.progress_bar.setValue)
             self.thread.finished.connect(self.on_resize_complete)
             self.thread.start()
-            
+
         except PermissionError as e:
             QMessageBox.critical(self, 'Erro', f'Erro de permissão: {e}')
         except Exception as e:
@@ -160,6 +157,7 @@ class ImageResizeApp(QWidget):
     def on_resize_complete(self):
         QMessageBox.information(self, 'Sucesso', 'Imagens redimensionadas com sucesso.')
         self.progress_bar.setVisible(False)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
